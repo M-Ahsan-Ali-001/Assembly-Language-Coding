@@ -1,0 +1,67 @@
+include emu8086.inc
+
+
+org 100h 
+
+.data  
+var1 dw ?
+var2  dw ?
+var3 dw 2H
+sum dw 0h
+
+.code
+
+call scan_num
+mov var1,cx
+
+call scan_num
+mov var2,cx 
+
+  mov bx,var2
+  sub bx,1h
+  mov dx,var1
+ 
+ whileSum: cmp dx,bx
+  jnl endWhileSum  
+  
+ 
+  inc dx
+  add sum,dx
+  mov ax,dx
+  call print_num
+  print 10
+  print 13
+jmp whilesum
+endWhileSum:
+  
+  mov ax,sum
+  call print_num
+  print 10
+  print 13
+ 
+ 
+
+define_scan_num
+define_print_num
+define_print_num_uns
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ret
+
+
+
+
