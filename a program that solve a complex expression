@@ -1,0 +1,86 @@
+;this program will run emu8086 , this will take a number from user then perform following operation
+; x+(x^2/2)+(x^3/3) +(x^4/4) , x is the input number 
+
+include emu8086.inc
+ 
+org 100h
+
+.data 
+
+x1 dw ?  ;will take input from user
+x2 dw ?
+x3 dw ?
+x4 dw ?
+ y2 dw 2h
+ y3 dw 3h
+ y4 dw 4h
+ sum dw 0h ;willstore num
+ 
+.code 
+
+;conditon = x1+ x2/2 +x3/3 + 
+
+
+call scan_num
+mov x1,cx
+         
+mov x2,cx 
+mov x3,cx
+mov x4,cx
+
+ 
+mov ax,x2
+mul x2
+
+div y2
+mov x2,ax
+
+
+
+ 
+ 
+
+mov ax,x3
+mul x3
+mul x3
+div y3
+mov x3,ax 
+
+
+mov ax,x4
+mul x4
+mul x4
+mul x4
+div y4
+mov x4,ax
+
+
+
+ 
+mov ax,x1 
+add ax,x2
+add ax,x3
+add ax,x4 
+
+
+
+
+
+mov sum,ax
+mov bx,sum
+
+call print_num
+print 13
+print 10 
+ 
+define_scan_num
+define_print_num
+define_print_num_uns
+ 
+ 
+ 
+ret
+
+
+
+
