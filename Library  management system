@@ -1,0 +1,241 @@
+include emu8086.inc
+org 100h
+.data
+books dw 1,1,1,1,1
+arr dw 'DSA $','COAL$','GRAPh THOERY $','English $','Discreete $'
+reut dw 5 dup (?)
+rt dw 0
+is dw 0
+i dw 0
+j dw 0
+bk dw 0
+pt dw 0
+t dw 0
+.code
+mov ax,@data
+mov ds,ax
+print "*************************************"
+print 10
+print 13
+print "*** Books in Stock: ***"
+print 10
+print 13
+print "*** 1)DSA ***"
+print 10
+print 13
+print "*** 2)COAL ***"
+print 10
+print 13
+print "*** 3)GRAPh THOERY ***"
+print 10
+print 13
+print "*** 4)English ***"
+print 10
+print 13
+print "*** 5)Discreete ***"
+print 10
+print 13
+print "*************************************"
+print 10
+print 13
+start:
+print '++++++++++++++++++++++++++++'
+print 10
+print 13
+print '+++ what you want to do: +++'
+print 10
+print 13
+print '1)issue a book'
+print 10
+print 13
+print '2)return a book'
+print 10
+print 13
+print '3)Exit'
+print 10
+print 13
+print '++++++++++++++++++++++++++++'
+print 10
+print 13
+print 'enter here:'
+call scan_num:
+mov ax,cx
+cmp ax,1
+je issu
+cmp ax,2
+je rett; todo
+cmp ax,3
+je exit
+rett:
+inc rt
+print 10 print 13
+print "Which you want to return Enter Number:"
+print 10 print 13
+call scan_num:
+mov ax,cx
+cmp ax,5
+jle rmv
+rmv:
+mov si,ax
+mov ax,books[si]
+mov books[si],1
+mov reut,ax
+jmp prt
+issu:
+print 10
+print 13
+print 'enter book number number to issue:'
+print 10
+print 13
+print 'enter here:'
+call scan_num:
+mov ax,cx
+cmp ax,1
+je book1
+cmp ax,2
+je book2
+cmp ax,3
+je book3
+cmp ax,4
+je book4
+cmp ax,5
+je book5
+book1:
+mov si,bk
+add books[si],-1
+;add bk,2
+;inc is
+jmp prt
+book2:
+mov si,bk
+add books[si],4
+;add bk,2
+;inc is
+jmp prt
+book3:
+mov si,bk
+add books[si],10
+print 10 print 13
+;add bk,2
+;inc is
+jmp prt
+book4:
+mov si,bk
+add books[si],25
+;add bk,2
+;inc is
+jmp prt
+book5:
+mov si,bk
+add books[si],35
+;print 'testing book 5'
+;call print_num:
+;mov ax,books[si]
+;add bk,2
+;inc is
+jmp prt
+prt:
+inc is
+print 10
+print 13
+mov cx,is
+mov j,0
+mov pt,0
+print 10
+print 13
+print 'book issued and not returned:'
+loopp:
+mov si,j
+cmp books[si],1
+je goto
+print 10
+print 13
+mov ax,pt
+print ' book number: '
+call print_num:
+mov ax,pt
+print 10
+print 13
+add pt,2
+mov si,j
+mov ax,books[si]
+mov si,ax
+print ' book id:'
+call print_num:
+print 10
+print 13
+print " "
+lea dx,arr[si]
+mov ah,9
+int 21h
+print 10
+print 13
+mov ax,books[si]
+print 10
+print 13
+print "-NEXT book-"
+print 10
+print 13
+goto:
+add j,2
+inc i
+loop loopp
+add bk,2
+print 10
+print 13
+mov ax,rt
+cmp ax,0
+je zero
+jg grt
+zero:
+print 10
+print 13
+print "book returned:"
+print 10
+print 13
+print "No BOOK"
+print 10
+print 13
+jmp start
+grt:
+print 10 print 13
+print "book returend:"
+print 10 print 13
+mov cx,rt
+mov ax,0
+mov si,ax
+mov t,0
+lp:
+print 10
+print 13
+print "book numberr:"
+mov ax,t
+call print_num:
+mov ax,reut[si]
+mov si,ax
+print 10
+print 13
+print " book idr:"
+call print_num:
+mov ax,arr[si]
+print 10
+print 13
+lea dx,arr[si]
+mov ah,9
+int 21h
+print 10
+print 13
+print "-NEXT book-"
+print 10
+print 13
+inc ax
+inc t
+loop lp
+print 10
+print 13
+jmp start
+define_scan_num
+define_print_num
+define_print_num_uns
+exit:
+ret
