@@ -1,0 +1,860 @@
+
+include emu8086.inc
+org 100h
+.data
+v1 dw ?
+v2 dw ?
+v3 dw ?
+v4 dw ?  
+res dw ?
+r1 dw ?
+r2 dw ?
+r3 dw ?
+r4 dw ?
+v1_i dw 10,13,'ENTER value of a: $'
+v2_i dw  10,13,'ENTER value of b: $'
+v3_i dw  10,13,'ENTER value of c: $'
+v4_i dw  10,13,'ENTER value of d: $'
+p1_i dw 10,13,'ENTER value of a: $'
+p2_i dw 10,13,'ENTER power: $'
+pr0 dw 10,13,'++++++++++++++++++++++++++++++++++++++++ $',10,13
+pr1 dw 10,13,'**************************************** $',10,13
+pr2 dw 10,13,'*** 1) Add Two Numbers               *** $',10,13
+pr3 dw 10,13,'*** 2) subtract Two Numbers          *** $',10,13
+pr4 dw 10,13,'*** 3) divide Two Numbers            *** $',10,13
+pr5 dw 10,13,'*** 4) multiply two Numbers          *** $',10,13
+pr7 dw 10,13,'*** 5) Factorial a Number            *** $',10,13
+pr8 dw 10,13,'*** 6) to find power of number       *** $',10,13
+pr9 dw 10,13,'*** 7) a+b/2                         *** $',10,13
+pr10 dw 10,13,'*** 8) (a + b)^2 _ formula           *** $',10,13
+pr11 dw 10,13,'*** 9) (a + b)^3 _ formula           *** $',10,13
+pr12 dw 10,13,'*** 10) (a - b)^3_ formula           *** $',10,13
+pr13 dw 10,13,'*** 11) a^1 + b^2 + c^3 + d^4        *** $',10,13
+pr14 dw 10,13,'*** 12) (a^3 + b^3)_ formula         *** $',10,13
+pr15 dw 10,13,'*** 13) (a^3 - b^3)_ formula         *** $',10,13
+pr16 dw 10,13,'*** 14) EXIT                         *** $',10,13
+
+sel dw 10,13,'Please enter a number: $',10,13    
+rs dw 10,13,'Result :$'
+prev dw 10,13 'Do you want perform operation on previous result(y=1/n=0)? $'
+f1 dw 10,13,'Calcualting: (a + b)^2= a^2 + 2ab + b^2 $',10,13
+f2 dw 10,13,'Calcualting: (a + b)^3= a^3 + 3a^2b + 3ab^2 + b^3 $',10,13
+f3 dw 10,13,'Calcualting: (a - b)^3= a^3 - 3a^2b + 3ab^2 - b^3 $',10,13
+f4 dw 10,13,'Calcualting: (a^3 + b^3)=  (a-b)(a^2 +ab +b^2) $',10,13
+f5 dw 10,13,'Calcualting: (a^3 - b^3)=  (a+b)(a^2 -ab +b^2) $',10,13
+
+bt dw 10,13,'            =========================== $',10,13
+st dw 10,13,'               ASSEMBLY CALCUALTOR!!! $',10,13
+op dw 10,13, '--------------------------- $',10,13
+op1 dw 10,13, '     OPERATIONS $',10,13
+
+op2 dw 10,13, 'Performing Addition: $',10,13
+op3 dw 10,13, 'Performing Subtraction: $',10,13
+op4 dw 10,13, 'Performing Multipication: $',10,13
+op5 dw 10,13, 'Performing Division:$',10,13
+op6 dw 10,13, 'Finding Factorial:$',10,13
+op7 dw 10,13, 'Finding POWER:$',10,13
+op8 dw 10,13, 'Calculating a^1 + b^2 + c^3 + d^4: $',10,13
+op9 dw 10,13, 'Calculating a+b/2: $',10,13
+wrg dw 10,13,'WRONG NUMBER!!! $',10,13
+entr dw 10,13, 'Enter a digit between 0 to 7: $',10,13
+.code
+
+main PROC
+         
+    MOV AH, 06h    ; Scroll up function
+    XOR AL, AL     ; Clear entire screen
+    XOR CX, CX     ; Upper left corner CH=row, CL=column
+    MOV DX, 184FH  ; lower right corner DH=row, DL=column 
+    MOV BH, 1Eh   ; Color selection
+    INT 10H
+    
+   
+    mov ax,@data    ;moving address of data section into ax 
+    mov ds,ax       ;intializing data segment
+    
+    
+    
+    lea dx,bt   ; In this area and below we are print strings
+    mov ah,9     ; an interrupt to print astring 
+    int 21h
+    
+    
+    lea dx,st
+    mov ah,9
+    int 21h
+    
+    
+    
+    
+    lea dx,bt
+    mov ah,9
+    int 21h  
+    
+    print 10 
+    print 13
+    
+   
+    start:
+    
+        
+    lea dx,op
+    mov ah,9
+    int 21h
+
+    
+    lea dx,op1
+    mov ah,9
+    int 21h
+    
+    
+    
+    
+    
+    lea dx,op
+    mov ah,9
+    int 21h
+    print 10 
+    print 13
+    
+    
+    LEA dx,pr1
+    mov ah,9
+    int 21h
+   
+    LEA dx,pr1
+    mov ah,9
+    int 21h
+    LEA dx,pr2
+    mov ah,9
+    int 21h
+    LEA dx,pr3
+    mov ah,9
+    int 21h
+    LEA dx,pr4
+    mov ah,9
+    int 21h
+    LEA dx,pr5
+    mov ah,9
+    int 21h 
+    LEA dx,pr7
+    mov ah,9
+    int 21h 
+    LEA dx,pr8
+    mov ah,9
+    int 21h
+    LEA dx,pr9
+    mov ah,9
+    int 21h
+    LEA dx,pr10
+    mov ah,9
+    int 21h
+    LEA dx,pr11
+    mov ah,9
+    int 21h
+    LEA dx,pr12
+    mov ah,9
+    int 21h
+    LEA dx,pr13
+    mov ah,9
+    int 21h
+    LEA dx,pr14
+    mov ah,9
+    int 21h
+    LEA dx,pr15
+    mov ah,9
+    int 21h
+    LEA dx,pr16
+    mov ah,9
+    int 21h
+    
+    LEA dx,pr1
+    mov ah,9
+    int 21h   
+    LEA dx,pr1
+    mov ah,9
+    int 21h
+   
+    lea dx,sel   ; in this area and above we are prining strings
+    mov ah,9
+    int 21h  
+   
+    call scan_num: ; in this area taking input from user
+    mov ax,cx
+   
+    cmp ax,1  ;in this area comparing entered values and
+    je add_tt ; jumping to desired instructions
+    
+    cmp ax,2
+    je subb
+    
+    cmp ax,3
+    je divv
+    
+    
+    cmp ax,4
+    je muli
+    
+    cmp ax,5
+    je facto
+    
+    cmp ax,6
+    je pow
+    
+    cmp ax,7
+    je e1          
+    
+    
+    cmp ax,8
+    je e2
+    
+    
+    cmp ax,9
+    je e3
+    
+    
+    cmp ax,10
+    je e4 
+    
+    
+    cmp ax,11
+    je e5
+    
+    
+    cmp ax,12
+    je e6 
+    
+    cmp ax,13
+    je e7  
+    
+    cmp ax,14
+    je exit
+           
+    cmp ax,0
+    jle agn1
+    cmp ax,15
+    jge agn1        
+    
+     
+   add_tt:  ;a label to print sum of  numbers
+    
+    lea dx,op2
+    mov ah,9
+    int 21h
+   
+    
+    lea dx,v1_i
+    mov ah,9
+    int 21h
+   
+    call scan_num:
+    mov v1,cx 
+    
+   
+    print 10 print 13 ;print to next line and carraige returning
+    lea dx,v2_i
+    mov ah,9
+    int 21h
+   
+    call scan_num:
+    
+    mov v2,cx
+    mov ax,v1
+    add ax,v2
+    mov res,ax
+    jmp reslt 
+    
+   facto: ; label to print factorial of a program 
+    
+    po:
+    lea dx,op6
+    mov ah,9
+    int 21h
+   
+    
+    lea dx,v1_i
+    mov ah,9
+    int 21h 
+    
+    
+    lea dx,entr
+    mov ah,9
+    int 21h
+   
+   
+    call scan_num:
+    
+    cmp cx,7
+    jg rptt
+    
+    
+    mov bx,1
+    mov ax,1
+    lpp: 
+    mul bx
+    inc bx
+    
+    loop lpp
+    mov res,ax
+    jmp reslt
+    rptt: 
+    
+    
+    lea dx,wrg
+    mov ah,9
+    int 21h 
+    
+    jmp po
+    
+      
+    
+    
+    
+    
+    
+    
+    
+   
+   muli:  ; label to print multipication of number 
+    
+    lea dx,op4
+    mov ah,9
+    int 21h
+   
+    
+    
+    lea dx,v1_i
+    mov ah,9
+    int 21h
+   
+    call scan_num:
+    mov v1,cx 
+    
+   
+    print 10 print 13
+    lea dx,v2_i
+    mov ah,9
+    int 21h
+   
+    call scan_num:
+    
+    mov v2,cx
+    mov ax,v1
+    mul v2
+    mov res,ax
+    jmp reslt 
+    
+     
+    subb:  ; label to subtract two number
+   
+    lea dx,op3
+    mov ah,9
+    int 21h
+   
+    
+    lea dx,v1_i
+    mov ah,9
+    int 21h
+   
+    call scan_num:
+    mov v1,cx
+   
+    print 10 print 13
+   
+    lea dx,v2_i
+    mov ah,9
+    int 21h
+   
+    call scan_num:
+    mov v2,cx
+     
+    mov ax,v1
+    sub ax, v2 
+    mov res,ax
+    jmp reslt
+    
+    divv: ; label to divide number
+    
+    lea dx,op5
+    mov ah,9
+    int 21h
+   
+    lea dx,v1_i
+    mov ah,9
+    int 21h
+   
+    call scan_num:
+    mov v1,cx
+   
+    print 10 print 13
+   
+    lea dx,v2_i
+    mov ah,9
+    int 21h
+   
+    call scan_num:
+    mov v2,cx 
+    
+    cmp v2,0
+    je opo
+    mov dx,0 
+    mov ax,v1
+    div v2 
+    mov res,ax
+    jmp reslt
+    opo:    
+    mov res,0
+    jmp reslt
+    
+   e1: ; label to perform a+b/2
+    
+    
+    
+    lea dx,op9
+    mov ah,9
+    int 21h
+    
+    lea dx,v1_i
+    mov ah,9
+    int 21h
+    
+    call scan_num:
+    mov v1,cx
+    
+    
+    lea dx,v2_i
+    mov ah,9
+    int 21h
+    
+    call scan_num:
+    mov v2,cx
+    mov dx,0
+    mov ax,v2   
+    mov bx,2
+    div bx
+    
+    add ax,v1
+    
+    mov res,ax
+    jmp reslt 
+    
+    pow: ; label to find power of a number
+   
+    lea dx,op7
+    mov ah,9
+    int 21h
+   
+    
+    lea dx,p1_i
+    mov ah,9
+    int 21h
+    
+    call scan_num:
+    mov v1,cx 
+    
+    lea dx,p2_i
+    mov ah,9
+    int 21h
+    
+    call scan_num:
+    mov v2,cx 
+    
+    
+    
+    mov cx,v2
+    mov ax,1
+    powr:
+    mul v1
+    
+    loop powr
+    mov res,ax
+    jmp reslt
+    
+   e2: ;label tofind (a+b)^2= (a^2 + 2ab + b^2)
+    
+    
+    lea dx,f1
+    mov ah,9
+    int 21h
+      
+    lea dx,v1_i
+    mov ah,9
+    int 21h
+     
+    call scan_num
+    mov v1,cx
+     
+    lea dx,v2_i
+    mov ah,9
+    int 21h
+     
+    call scan_num
+    mov v2,cx
+     
+    mov ax,v1
+    mov bx,v1
+    mul bx  
+    
+    mov r1,ax
+    
+    mov ax,v2
+    mov bx,v2
+    mul bx
+    
+    mov r2,ax
+     
+    mov ax,v1
+     
+    mul v2
+    mov cx,2
+    mul cx
+    mov r3,ax
+     
+     
+    mov ax,r1
+    add ax,r2
+    add ax,r3
+    mov res,ax
+    mov ax,r1  
+    jmp reslt
+     
+   e3: ; label (a - b)^3 =(a^3 + 3a^2b + 3ab^2 + b^3 )
+     
+    lea dx,f2
+    mov ah,9
+    int 21h
+     
+    lea dx,v1_i
+    mov ah,9
+    int 21h
+    
+    call scan_num:
+    mov v1,cx
+    
+    lea dx,v2_i
+    mov ah,9
+    int 21h
+    
+    call scan_num:
+    mov v2,cx
+    
+    mov ax,v1
+    mov bx,v1
+    mul bx
+    mul bx   
+    
+    mov r1,ax
+    
+    mov ax,v2
+    mov bx,v2
+    mul bx
+    mul bx   
+    
+    mov r2,ax
+    
+    mov bx,v2
+    mov cx,3   
+    mov ax,v1
+    mul ax
+    mul bx
+    mul cx
+    
+    mov r3,ax
+    mov bx,v1
+    mov ax,v2
+    mov cx,3
+    mul ax
+    mul bx
+    mul cx
+    mov r4,ax
+     
+    mov ax,r1
+    add ax,r3
+    add ax,r4
+    add ax,r2
+    
+    mov res,ax
+    jmp reslt 
+     
+  
+   e4:; label  (a-b)^3 =(a^3 - 3a^2b + 3ab^2 -b^3)
+    
+    lea dx,f3
+    mov ah,9
+    int 21h
+    
+    lea dx,v1_i
+    mov ah,9
+    int 21h
+    
+    call scan_num:
+    mov v1,cx
+    
+    lea dx,v2_i
+    mov ah,9
+    int 21h
+    
+    call scan_num:
+    mov v2,cx
+    
+    mov ax,v1
+    mov bx,v1
+    mul bx
+    mul bx   
+    
+    mov r1,ax
+    
+    mov ax,v2
+    mov bx,v2
+    mul bx
+    mul bx   
+    
+    mov r2,ax
+    
+    mov bx,v2
+    mov cx,3   
+    mov ax,v1
+    mul ax
+    mul bx
+    mul cx
+    
+    mov r3,ax
+    mov bx,v1
+    mov ax,v2
+    mov cx,3
+    mul ax
+    mul bx
+    mul cx
+    mov r4,ax
+     
+    mov ax,r1
+    sub ax,r3
+    add ax,r4
+    sub ax,r2
+    
+    mov res,ax
+    jmp reslt  
+  
+  e5: ; label to calculate a^1 + b^2 + c^3 +d^4 
+     
+    lea dx,op8
+    mov ah,9
+    int 21h
+   
+    
+     lea dx,v1_i
+     mov ah,9
+     int 21h
+     
+     call scan_num:
+     mov v1,cx
+     
+     
+     lea dx,v2_i
+     mov ah,9
+     int 21h
+     
+     call scan_num:
+     mov v2,cx
+     
+     
+     lea dx,v3_i
+     mov ah,9
+     int 21h
+     
+     call scan_num:
+     mov v3,cx
+     
+     
+     lea dx,v4_i
+     mov ah,9
+     int 21h
+     
+     call scan_num:
+     mov v4,cx
+     mov cx,v1
+     mov r1,cx
+     
+     mov ax,v2
+     mov bx,v2
+     mul bx
+     mov r2,ax
+     
+     mov ax,v3
+     mov bx,v3
+     mul bx
+     mul bx
+     mov r3,ax
+     
+     
+     mov ax,v4
+     mov bx,v4
+     mul bx
+     mul bx 
+     mul bx
+     mov r4,ax
+     
+     mov ax,r1
+     add ax,r2
+     add ax,r3
+     add ax,r4
+     
+     mov res,ax
+     jmp reslt
+     
+   e6:;label to perform (a^3 + b^3) =(a-b)(a^2 +ab + b^2) 
+   
+      lea dx,f4
+      mov ah,9
+      int 21h
+      lea dx,v1_i
+      mov ah,9
+      int 21h
+      
+      call scan_num:
+      mov v1,cx
+      
+      
+      
+      lea dx,v2_i
+      mov ah,9
+      int 21h
+      
+      call scan_num:
+      mov v2,cx
+      
+      mov ax,v1
+      sub ax,v2
+      mov r1,ax
+      
+      mov ax,v1
+      mov bx,v1
+      mul bx
+      
+      mov r2,ax
+      
+      
+      
+      mov ax,v2
+      mov bx,v2
+      mul bx
+      
+      mov r3,ax
+      
+      mov ax,v1
+      mul v2
+      mov r4,ax
+      
+      mov ax,r2
+      add ax,r3
+      add ax,r4 
+      mul r1   
+      
+      mov res,ax
+      jmp reslt
+      
+     e7: ; label to perform (a^3+b^3) (a+b) (a^2 - ab +b^2)
+      
+      lea dx,f5
+      mov ah,9
+      int 21h   
+      
+      lea dx,v1_i
+      mov ah,9
+      int 21h
+      
+      call scan_num:
+      mov v1,cx
+      
+      
+      
+      lea dx,v2_i
+      mov ah,9
+      int 21h
+      
+      call scan_num:
+      mov v2,cx
+      
+      mov ax,v1
+      add ax,v2        
+      mov r1,ax
+      
+      mov ax,v1
+      mov bx,v1
+      mul bx
+      
+      mov r2,ax
+      
+      
+      
+      mov ax,v2
+      mov bx,v2
+      mul bx
+      
+      mov r3,ax
+      
+      mov ax,v1
+      mul v2
+      mov r4,ax
+      
+      mov ax,r2
+      sub ax,r4
+      add ax,r3 
+      mul r1   
+      
+      mov res,ax
+      jmp reslt
+     
+      
+      
+      
+      
+      
+        
+     
+      
+
+  reslt: ;    lable to print the result
+
+    
+    
+    lea dx,pr0
+    mov ah,9
+    int 21h 
+    lea dx,pr0
+    mov ah,9
+    int 21h
+    
+    lea dx,rs
+    mov ah,9
+    int 21h
+    mov ax,res
+    call print_num:
+    lea dx,pr0
+    mov ah,9
+    int 21h
+    
+    jmp start
+    
+   agn1: ; label to print wrong number  adn restart
+    lea dx,wrg
+    mov ah,9
+    int 21h 
+    jmp start
+   
+   exit: ; label to exit
+        
+    
+
+
+
+
+main ENDP
+
+DEFINE_print_num
+DEFINE_print_num_uns
+DEFINE_scan_num
+END main
+ 
+ret
+
