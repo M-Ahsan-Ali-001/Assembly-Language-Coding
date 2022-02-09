@@ -1,0 +1,125 @@
+INCLUDE EMU8086.inc
+
+ORG 100h
+
+.data
+
+week_temp dw 20,35,22,45,31,42,27
+dy dw 10,13,'DAYS $',10,13  
+ctr dw 1
+.code
+
+main PROC
+   
+  mov ax, @data
+  mov ds,ax
+ 
+  mov si,0
+ 
+  mov cx,7  
+ 
+  mov dx,1  
+
+ 
+  check:  
+ 
+ 
+  lea dx , dy
+  mov ah , 9h
+  int 21h
+ 
+
+  mov ax,ctr
+  call print_num
+ 
+  mov ax,week_temp[si]
+  cmp ax,20
+  je less
+  cmp ax,40
+  jl a_less
+  jg greater
+ 
+ 
+ 
+  less:
+  print 10
+  print 13
+  print "temperature: "
+ 
+
+ 
+  mov ax,week_temp[si]
+  call print_num
+  print 10
+  print 13
+         
+         
+  print " ++WEATHER IS COLD++"
+  print 10
+  print 13
+ 
+  jmp next
+ 
+ 
+  a_less:
+ 
+ 
+  print 10
+  print 13
+  print "temperature:"
+ 
+ 
+ 
+  mov ax,week_temp[si]
+  call print_num
+  print 10
+  print 13
+         
+         
+  print " ++WEATHER IS NORMAL++"
+  print 10
+  print 13
+ 
+  jmp next
+           
+  greater:
+ 
+ 
+  print 10
+  print 13
+  print "temperature:"
+ 
+ 
+ 
+  mov ax,week_temp[si]
+  call print_num
+  print 10
+  print 13
+         
+         
+  print " ++WEATHER IS HOT++"
+  print 10
+  print 13
+ 
+  jmp next        
+ 
+  next:
+  inc si
+  inc si
+  inc ctr
+  loop check
+     
+   
+    main ENDP
+Define_PRINT_NUM
+Define_PRINT_NUM_UNS
+Define_SCAN_NUM
+
+END main
+
+
+
+
+
+
+ret
